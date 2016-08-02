@@ -18,8 +18,7 @@ $(function  () {
 			clearInterval(resourceLoad);
 			images.imageReady=true;
 			var fail=images.imagesFailedToLoad;
-			loading.html("点击继续").animate({transform:"translateY(-15%)",opacity:"0"},1000);
-
+			loading.html("点击继续").css({'animation':'flash 2s ease infinite,big 2s ease infinite','-webkit-animation':'flash 2s ease infinite,big 2s ease infinite','-moz-animation':'flash 2s ease infinite,big 2s ease infinite','-o-animation':'flash 2s ease infinite,big 2s ease infinite'})
 		}
 		if (images.imageReady ) {
 			// 图片预加载成功后进行接下来的逻辑
