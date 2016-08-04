@@ -132,7 +132,9 @@ var engine=(function  () {
 	// 背景云朵相关
 	var cloud={createCloud:createCloud,
 		clearCloud:function  () {
-			$('i').filter('.m-cloud').remove();
+			$('i').filter('.m-cloud').fadeOut(1000,function  () {
+				$('i').remove();
+			});
 		}
 	}; 
 
@@ -140,48 +142,55 @@ var engine=(function  () {
 	function createCloud () {
 		function makeCloud (attr) {
 			$('#g-window').append("<i class='m-cloud'></i>");
-			var cloud=$('i.m-cloud:last');
-			cloud.css({'top':attr.pos+'%','left':'-40%','width':attr.size+'%','height':attr.size+'%','zIndex':attr.z,'opacity':attr.opa});
-			return cloud;
+			var $cloud=$('i.m-cloud:last');
+			$cloud.css({'top':attr.pos+'%','left':'-40%','backgroundImage':"url(images/cloud"+attr.num+".png)"})
+			.addClass("f-cloud"+attr.appr);
+
+			console.log($cloud);
+			fly($cloud,attr);
 		}
 
 		// 随机位置
 		function ranPos () {
 			var result=Math.floor(Math.random()*100);
-			return result>15?result:ranPos();
+			return result>15&&result<60?result:ranPos();
 		}
 
-		// 随机大小、透明度、云朵类型
-		function ranSize () {
-			var box={1:{size:20,opa:0.3,z:1,type:1},2:{size:30,opa:0.5,z:2,type:2},3:{size:30,opa:0.7,z:3,type:3},4:{size:40,opa:1,z:4,type:4}};
+		// 1-4的随机数
+		function ran1234 () {
 			var result=Math.random()*10;
 			if (result<2.5) {
-				return box[1];
+				return 1;
 			} 
 			if (result>=2.5&&result<5) {
-				return box[2];
+				return 2;
 			} 
 			if (result>5 &&result<7.5) {
-				return box[3];
+				return 3;
 			}
 			else {
-				return box[4];
+				return 4;
 			}
 		}
 
-		// 随机速度
-		function ranSpeed () {
-			return Math.ceil(Math.random()*100);
+		// 随机移动完所需时间
+		function ranTime () {
+			var result=Math.floor(Math.random()*36000);
+			return result>26000?result:ranTime();
+		}
+
+		//云朵飘动
+		function fly ($cloud,attr) {
+			$cloud.animate({left:'140%'},attr.usedTime,function  () {
+				$cloud.remove();
+			})
 		}
 
 		var attr={};
-		var sizeOpa=ranSize();
-		attr.speed=ranSpeed();
+		attr.usedTime=ranTime();
 		attr.pos=ranPos();
-		attr.size=sizeOpa.size;
-		attr.opa=sizeOpa.opa;
-		attr.z=sizeOpa.z;
-		attr.type=sizeOpa.type;
+		attr.appr=ran1234();
+		attr.num=ran1234();
 		return makeCloud(attr);
 	}
 

@@ -17,14 +17,18 @@ $(function  () {
 		if (percentage==100) {
 			clearInterval(resourceLoad);
 			images.imageReady=true;
-			var fail=images.imagesFailedToLoad;
+			engine.cloud.createCloud();
 			loading.html("点击继续").css({'animation':'flash 2s ease infinite,big 2s ease infinite','-webkit-animation':'flash 2s ease infinite,big 2s ease infinite','-moz-animation':'flash 2s ease infinite,big 2s ease infinite','-o-animation':'flash 2s ease infinite,big 2s ease infinite'})
+			setInterval(function  () {
+				engine.cloud.createCloud();
+			},3000);
 		}
 		if (images.imageReady ) {
 			// 图片预加载成功后进行接下来的逻辑
 			$('#g-window').click(function  () {
 					$(this).css('background-position','50% 50%');
 					loading.fadeOut();
+					engine.cloud.clearCloud();
 				})
 		}	
 	},20);
