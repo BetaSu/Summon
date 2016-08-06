@@ -21,7 +21,7 @@
 			margin-left: -100px;
 			width: 200px;
 			color: #3676b7;
-			font: bold 30px "微软雅黑";
+			font: bold 30px '微软雅黑';
 			-webkit-transition:transform 0.7s ease;
 			-o-transition:transform 0.7s ease;
 			-moz-transition:transform 0.7s ease;
@@ -31,33 +31,48 @@
 /*云朵模块*/
 .m-cloud {position: absolute;
 		background-repeat: no-repeat;
-		background-size: container;
+		background-size: 100%;
 		}
 
 
-.f-cloud1 {width: 30%;
-		height: 30%;
+.f-cloud1 {width: 10%;
+		height: 10%;
 		opacity:0.3;
 		z-index:1;
 		 }
 
-.f-cloud2 {width: 35%;
-		height: 35%;
+.f-cloud2 {width: 17%;
+		height: 17%;
 		opacity:0.7;
 		z-index:2;
 		 }
 
-.f-cloud3 {width: 35%;
-		height: 35%;
+.f-cloud3 {width: 25%;
+		height: 25%;
 		opacity:0.8;
 		z-index:3;
 		 }
 
-.f-cloud4 {width: 40%;
-		height: 40%;
+.f-cloud4 {width: 32%;
+		height: 32%;
 		opacity:1;
-		z-index:4;
+		z-index:5;
 		 }
+
+.f-logo {position: absolute;
+		width: 70%;
+		height: 60%;
+		z-index: 4;
+		background: url(../images/logo.png) no-repeat;
+		background-size: 100%;
+		top:  -60%;
+		left: 50%;
+		-webkit-transform:translateX(-50%);
+		-o-transform:translateX(-50%);
+		-ms-transform:translateX(-50%);
+		-moz-transform:translateX(-50%);
+		transform:translateX(-50%);
+	}
 
 
 

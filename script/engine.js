@@ -47,7 +47,7 @@ var engine=(function  () {
 		}
 	}
 
-	// 音频模块
+	// 音频模块 未完成
 	var SoundsMode=function  () {
 		// 音频加载
 		this.trigger=true;
@@ -64,12 +64,6 @@ var engine=(function  () {
 		soundsReady:false,
 		getSound: function  (soundUrl) {
 			return this.sounds[soundUrl];
-		},
-		soundLoadedCallback: function  (e) {
-			this.soundsLoaded++;
-		},
-		soundLoadErrorCallback: function (e) {
-			this.soundsFailedToLoad++;
 		},
 		pause:function  (name) {
 			var url="sounds/"+name+".ogg",
@@ -104,25 +98,18 @@ var engine=(function  () {
 				}
 			}
 		},
+		soundType: function  (soundUrl) {
+			
+		},
 		loadSound: function  (soundUrl) {
 			var sound=new Audio(),
 			me=this;
 			sound.volume=0.3;
-			sound.src=soundUrl;
-			sound.addEventListener("canplay",function  (e) {
-				me.soundLoadedCallback(e);
-			});
-			sound.addEventListener("error",function  (e) {
-				me.soundLoadErrorCallback(e);
-			})
+			if (sound.canPlayType('audio/ogg')) {
+				sound.src=soundUrl+'.ogg';
+			}	else {sound.src=soundUrl+'.mp3'}
+			
 			this.sounds[soundUrl]=sound;
-		},
-		loadSounds: function  () {
-			if (this.soundsIndex<this.soundUrls.length) {
-				this.loadSound(this.soundUrls[this.soundsIndex]);
-				this.soundsIndex++;
-			}
-			return Math.floor((this.soundsLoaded+this.soundsFailedToLoad)/this.soundUrls.length*100);
 		},
 		queueSound: function  (soundUrl) {
 			this.soundUrls.push(soundUrl);
@@ -130,13 +117,7 @@ var engine=(function  () {
 	}
 
 	// 背景云朵相关
-	var cloud={createCloud:createCloud,
-		clearCloud:function  () {
-			$('i').filter('.m-cloud').fadeOut(1000,function  () {
-				$('i').remove();
-			});
-		}
-	}; 
+	var cloud={createCloud:createCloud}; 
 
 	//产生云朵 
 	function createCloud () {
@@ -145,8 +126,6 @@ var engine=(function  () {
 			var $cloud=$('i.m-cloud:last');
 			$cloud.css({'top':attr.pos+'%','left':'-40%','backgroundImage':"url(images/cloud"+attr.num+".png)"})
 			.addClass("f-cloud"+attr.appr);
-
-			console.log($cloud);
 			fly($cloud,attr);
 		}
 
@@ -194,6 +173,27 @@ var engine=(function  () {
 		return makeCloud(attr);
 	}
 
+	// logo
+	var logo={appearLogo:appearLogo};
 
-	return {ImagesMode:ImagesMode,SoundsMode:SoundsMode,cloud:cloud}
+	function appearLogo () {
+		$('#g-window').append("<i class='f-logo'></i>");
+		var $logo=$('i[class=f-logo]')
+		$logo.animate({top:'0'},500).animate({top:'-10%'},300)
+		.animate({top:'0'},190);
+	}
+
+	//背景元素向下移动，场景变换
+	function slideDown () {
+		$('#g-window').css('background-position','50% 50%');
+		var $logo=$('i[class=f-logo]');
+		$logo.animate({top:'+=100%'},300,function  () {
+			$logo.remove();
+		});
+	}
+
+	//主游戏
+
+
+	return {ImagesMode:ImagesMode,SoundsMode:SoundsMode,cloud:cloud,logo:logo,slideDown:slideDown}
 })()
