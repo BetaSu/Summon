@@ -73,6 +73,34 @@
 		-moz-transform:translateX(-50%);
 		transform:translateX(-50%);
 	}
+.f-ufo1 {width: 75px;
+		height: 88px;
+		background: url(../images/ufo.png) no-repeat;
+		position: absolute;
+		z-index: 7;
+}
+
+.f-ufo2 {width: 75px;
+		height: 88px;
+		background: url(../images/ufo.png) -91px 0 no-repeat;
+		position: absolute;
+		z-index: 3;
+	}
+
+.f-humo {width: 8%;
+		height: 8%;
+		position: absolute;
+		background: url(../images/humo.png) 0 0 no-repeat;
+		opacity: 0.8;
+		z-index: 6;
+		background-size: contain;
+}
+
+.f-humo2 {width: 5%;
+		height: 5%;
+		opacity: 0.6;
+		z-index: 2;
+	}
 
 
 

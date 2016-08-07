@@ -192,8 +192,57 @@ var engine=(function  () {
 		});
 	}
 
+
+	//ufo在背景中飞行，接受3个参数
+	//parent：飞行元素所在父元素
+	//which：指定飞行的元素
+	//humoType:指定尾气的类型
+	function ufo (parent,which,humoType) {
+		w=parent.width(),
+		h=parent.height();
+
+		//新位置
+		function newPos () {
+			var nw=(1-Math.random())*w,
+			nh=(1-Math.random())*h;
+			return {left:nw+'px',top:nh+'px'}
+		}
+		//到新位置所用时间
+		function newTime () {
+			var time=Math.random()*6000;
+			return time>1000?time:newTime();
+		}
+
+		//ufo的尾气
+		function humo () {
+			parent.append("<i class='f-humo'></i>");
+			var $humo=$('i[class=f-humo]:last');
+			if (humoType) $humo.addClass(humoType);
+			$humo.css('left',which.css('left'));
+			$humo.css('top',parseInt(which.css('top'))+40+'px');
+			$humo.animate({opacity:0,width:0,height:0},1500,function  () {
+				$(this).remove();
+			})
+			window.setTimeout(function  () {
+				humo();
+			},200)
+		}
+
+		// 移动
+		function move () {
+			console.log(which);
+			var pos=newPos(),
+			time=newTime();
+			which.animate({left:pos.left,top:pos.top},time,function  () {
+				move();
+			});
+		}
+		humo();
+		move();
+	}
+
 	//主游戏
 
 
-	return {ImagesMode:ImagesMode,SoundsMode:SoundsMode,cloud:cloud,logo:logo,slideDown:slideDown}
+	return {ImagesMode:ImagesMode,SoundsMode:SoundsMode,cloud:cloud,logo:logo,slideDown:slideDown,ufo:ufo}
 })()

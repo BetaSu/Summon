@@ -1,4 +1,4 @@
-$(function  () {
+ $(function  () {
 	var ImagesMode=engine.ImagesMode;
 	var images=new ImagesMode();
 
@@ -9,6 +9,8 @@ $(function  () {
 	images.queueImage("images/cloud3.png");
 	images.queueImage("images/cloud4.png");
 	images.queueImage("images/logo.png");
+	images.queueImage("images/ufo.png");
+	images.queueImage("images/humo.png");
 
 	var resourceLoad=setInterval(function  (e) {
 		var percentage=images.loadImages(),
@@ -20,6 +22,11 @@ $(function  () {
 			images.imageReady=true;
 			engine.cloud.createCloud();
 			engine.logo.appearLogo();
+			$('#g-window').append("<i class='f-ufo1'></i><i class='f-ufo2'></i>");
+			var $ufo1=$('i.f-ufo1');
+			engine.ufo($('#g-window'),$ufo1);
+			var $ufo2=$('i.f-ufo2');
+			engine.ufo($('#g-window'),$ufo2,'f-humo2');
 			loading.html("点击继续").css({'animation':'flash 2s ease infinite,big 2s ease infinite','-webkit-animation':'flash 2s ease infinite,big 2s ease infinite','-moz-animation':'flash 2s ease infinite,big 2s ease infinite','-o-animation':'flash 2s ease infinite,big 2s ease infinite'})
 			setInterval(function  () {
 				engine.cloud.createCloud();
