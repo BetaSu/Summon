@@ -230,7 +230,6 @@ var engine=(function  () {
 
 		// 移动
 		function move () {
-			console.log(which);
 			var pos=newPos(),
 			time=newTime();
 			which.animate({left:pos.left,top:pos.top},time,function  () {
@@ -242,7 +241,141 @@ var engine=(function  () {
 	}
 
 	//主游戏
+	// 用于创建新游戏，接收一个参数$box
+		// $box：指定游戏内容所在父元素
+		function creGame ($box) {
 
+			// a-b间的随机数，接收2个参数
+			//a代表起始参数
+			//b代表结束参数
+			function ranatb (a,b) {
+				var result=Math.floor(a+Math.random()*(b-a+1));
+				return result;
+			}
 
-	return {ImagesMode:ImagesMode,SoundsMode:SoundsMode,cloud:cloud,logo:logo,slideDown:slideDown,ufo:ufo}
+			var w=parseFloat($box.css('width'));
+
+			//根据窗口宽度调整显示的方格数。
+			function howManyBox () {
+				if (w<180)	return 6;
+				else return 7;
+			}
+
+			$box.css('height',w+'px');
+			var itemW=w/howManyBox(),			//方格宽度
+			itemIndex=0,						//方格索引
+			itemTop=0,							//距父级顶部距离
+			numArr=[],							//选中的数字
+			targetNum;							//目标数字
+
+			// 动态生成矩阵
+			for (var j=0;j<w;j+=itemW) {
+				for (var i=0;i<w;i+=itemW) {
+					var num=ranatb(1,9);
+					$box.append("<div class='f-item'></div>");
+					var $item=$('div[class=f-item]:last');
+					$item.css({left:i+'px',top:itemTop+'px',width:itemW+'px',height:itemW+'px'}).html(num).data({'num':num,'index':itemIndex++});
+				}
+				itemTop+=itemW;
+			}
+
+			/** 游戏动态生成表格后，调用CreTargetNum函数，函数根据剩余方格数量做判断
+			* 当剩余方格多于3个时，随机选取3个方格将他们所含数值相加产生目标数字
+			* 当剩余方格为1-2个时，将剩余方格所含数值相加产生目标数字
+			* 当没有剩余方格时，触发游戏胜利条件。
+			**/ 
+
+			// 产生一个目标数字
+			function CreTargetNum () {			
+				var $items=$('div.f-item'),
+				totalIndex=$items.last().index(),
+				$items=$('div.f-item'),
+				result=0;
+	
+				//产生一个目标索引,接收一个参数arr
+				//arr：该数组中包含的数不会作为目标索引
+				function targetIndex (arr) {
+					var result=ranatb(0,totalIndex);
+					if ($.type(arr)=='array' &&arr.length!=0) {
+						var trigger=false;
+						$.each(arr,function  (index,item) {
+							if (item==result) {
+								trigger=!trigger;
+							}	
+						})
+						if (trigger) return targetIndex(arr);
+					} 
+					return result;
+				}
+				// 当剩余方格大于等于3个时
+				if (totalIndex>=2) {
+					var result1=targetIndex(),
+					result2=targetIndex([result1]),
+					result3=targetIndex([result1,result2]),
+					num1=$items.eq(result1).data('num'),
+					num2=$items.eq(result2).data('num'),
+					num3=$items.eq(result3).data('num');
+					result=num1+num2+num3;
+					$('h3.targetNum').html(result);
+					targetNum=result;
+					return result;
+				}
+				// 当剩余1-2个方格时
+				if (totalIndex>=0&&totalIndex<2) {
+					$('div.f-item').each(function  (index,item) {
+						result+=$(item).data('num');
+						$('h3.targetNum').html(result);
+						targetNum=result;
+						return result;
+					})
+				}
+				// 所有方格清除完时
+				 else {
+					console.log(totalIndex>=2);
+					$('h3.targetNum').html('congratulation!');
+				}	
+		
+			}
+
+			//判断累加数值是否与目标数值相符以及后续操作
+			function judge () {
+				var totalNum=0;
+
+				//匹配成功后消除方块
+				function success () {
+					$('div.f-click').remove();
+				}
+
+				// 累加值总和
+				$.each(numArr,function  (index,item) {
+					totalNum+=item;
+				})
+
+				//结果处理
+				if (totalNum>targetNum) {
+					numArr=[];
+					$('div.f-item').removeClass('f-click');
+				}
+				if (totalNum==targetNum) {
+					success();
+					numArr=[];
+					CreTargetNum();	
+				}
+			}
+
+			//点击事件
+			$('div.f-item').click(function  () {
+				if (!$(this).hasClass('f-click')) {
+					$(this).addClass('f-click');
+					var num=$(this).data('num');
+					numArr.push(num);
+					judge();
+				}	
+			})
+
+			// 生成第一个目标数值
+			CreTargetNum()
+		}
+
+	return {ImagesMode:ImagesMode,SoundsMode:SoundsMode,cloud:cloud,logo:logo,slideDown:slideDown,ufo:ufo,creGame:creGame}
 })()

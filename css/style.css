@@ -103,6 +103,15 @@
 	}
 
 
+/*游戏窗口*/
+#g-game {background: #00f;height:100%;width: 40%;margin: 0 auto;position: absolute;}
+
+.f-item {background: #ff0;position: absolute;text-align: center;font: 30px "ariel";}
+.f-item:hover {background: #0f0;border-radius: 12px;}
+.f-click {background: #ccc;}
+.targetNum {margin: 0 50px; font-size: 40px;}
+
+
 
 /*动画*/
 @keyframes flash {

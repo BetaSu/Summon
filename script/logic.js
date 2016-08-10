@@ -37,6 +37,7 @@
 			$('#g-window').click(function  () {
 					engine.slideDown();
 					loading.fadeOut();
+					engine.creGame($('#g-game'));
 				})
 		}	
 	},20);
