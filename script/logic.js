@@ -27,17 +27,18 @@
 			engine.ufo($('#g-window'),$ufo1);
 			var $ufo2=$('i.f-ufo2');
 			engine.ufo($('#g-window'),$ufo2,'f-humo2');
-			loading.html("点击继续").css({'animation':'flash 2s ease infinite,big 2s ease infinite','-webkit-animation':'flash 2s ease infinite,big 2s ease infinite','-moz-animation':'flash 2s ease infinite,big 2s ease infinite','-o-animation':'flash 2s ease infinite,big 2s ease infinite'})
+			loading.html("点我继续").css({'animation':'flash 2s ease infinite,big 2s ease infinite','-webkit-animation':'flash 2s ease infinite,big 2s ease infinite','-moz-animation':'flash 2s ease infinite,big 2s ease infinite','-o-animation':'flash 2s ease infinite,big 2s ease infinite'})
 			setInterval(function  () {
 				engine.cloud.createCloud();
 			},3000);
 		}
 		if (images.imageReady ) {
 			// 图片预加载成功后进行接下来的逻辑
-			$('#g-window').click(function  () {
+			$('#f-loading').click(function  () {
 					engine.slideDown();
 					loading.fadeOut();
 					engine.creGame($('#g-game'));
+					$('#g-game').show();
 				})
 		}	
 	},20);

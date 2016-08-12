@@ -262,7 +262,8 @@ var engine=(function  () {
 			}
 
 			$box.css('height',w+'px');
-			var itemW=w/howManyBox(),			//方格宽度
+			var numPerRow=howManyBox(),
+			itemW=w/numPerRow,					//方格宽度
 			itemIndex=0,						//方格索引
 			itemTop=0,							//距父级顶部距离
 			numArr=[],							//选中的数字
@@ -277,6 +278,11 @@ var engine=(function  () {
 					$item.css({left:i+'px',top:itemTop+'px',width:itemW+'px',height:itemW+'px'}).html(num).data({'num':num,'index':itemIndex++});
 				}
 				itemTop+=itemW;
+			}
+			bkgPic();
+			// 根据行数生成自适应雪碧图
+			function bkgPic () {
+				$('div.f-item').css({'backgroundSize':numPerRow*143+"% "+numPerRow*132+"%",'backgroundPosition':'0 0'})
 			}
 
 			/** 游戏动态生成表格后，调用CreTargetNum函数，函数根据剩余方格数量做判断
@@ -366,10 +372,13 @@ var engine=(function  () {
 			//点击事件
 			$('div.f-item').click(function  () {
 				if (!$(this).hasClass('f-click')) {
+					$(this).css({'animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-webkit-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-moz-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-o-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite'})
 					$(this).addClass('f-click');
 					var num=$(this).data('num');
 					numArr.push(num);
 					judge();
+				} else {
+					$(this).css('animation','').removeClass('f-click');
 				}	
 			})
 
