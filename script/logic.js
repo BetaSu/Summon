@@ -1,6 +1,8 @@
  $(function  () {
 	var ImagesMode=engine.ImagesMode;
 	var images=new ImagesMode();
+	var ufoInterval;
+
 
 	//添加图片
 	images.queueImage("images/bkg.jpg");
@@ -28,17 +30,24 @@
 			var $ufo2=$('i.f-ufo2');
 			engine.ufo($('#g-window'),$ufo2,'f-humo2');
 			loading.html("点我继续").css({'animation':'flash 2s ease infinite,big 2s ease infinite','-webkit-animation':'flash 2s ease infinite,big 2s ease infinite','-moz-animation':'flash 2s ease infinite,big 2s ease infinite','-o-animation':'flash 2s ease infinite,big 2s ease infinite'})
-			setInterval(function  () {
+			ufoInterval=setInterval(function  () {
 				engine.cloud.createCloud();
 			},3000);
 		}
 		if (images.imageReady ) {
-			// 图片预加载成功后进行接下来的逻辑
+			// 图片预加载成功后进行接下来的逻辑处理
 			$('#f-loading').click(function  () {
 					engine.slideDown();
-					loading.fadeOut();
+					loading.fadeOut(function  () {
+						engine.removeUfo();
+						$('i').remove();
+						ufoInterval=setInterval(function  () {
+							engine.cloud.createCloud();
+						},3000);
+					});
 					engine.creGame($('#g-game'));
 					$('#g-game').show();
+					
 				})
 		}	
 	},20);

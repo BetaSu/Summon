@@ -192,11 +192,12 @@ var engine=(function  () {
 		});
 	}
 
-
+	var humoInterval=true; //该变量控制是否持续产生尾气
 	//ufo在背景中飞行，接受3个参数
 	//parent：飞行元素所在父元素
 	//which：指定飞行的元素
 	//humoType:指定尾气的类型
+	
 	function ufo (parent,which,humoType) {
 		w=parent.width(),
 		h=parent.height();
@@ -215,17 +216,19 @@ var engine=(function  () {
 
 		//ufo的尾气
 		function humo () {
-			parent.append("<i class='f-humo'></i>");
-			var $humo=$('i[class=f-humo]:last');
-			if (humoType) $humo.addClass(humoType);
-			$humo.css('left',which.css('left'));
-			$humo.css('top',parseInt(which.css('top'))+40+'px');
-			$humo.animate({opacity:0,width:0,height:0},1500,function  () {
-				$(this).remove();
-			})
-			window.setTimeout(function  () {
-				humo();
-			},200)
+			if (humoInterval) {
+				parent.append("<i class='f-humo'></i>");
+				var $humo=$('i[class=f-humo]:last');
+				if (humoType) $humo.addClass(humoType);
+				$humo.css('left',which.css('left'));
+				$humo.css('top',parseInt(which.css('top'))+40+'px');
+				$humo.animate({opacity:0,width:0,height:0},1500,function  () {
+					$(this).remove();
+				})
+				window.setTimeout(function  () {
+					humo();
+				},200)
+			}	
 		}
 
 		// 移动
@@ -240,8 +243,14 @@ var engine=(function  () {
 		move();
 	}
 
-	//主游戏
-	// 用于创建新游戏，接收一个参数$box
+	function removeUfo () {
+		$('i[class*=f-ufo]').remove();
+		humoInterval=false;
+
+	}
+
+		//主游戏
+		// 用于创建新游戏，接收一个参数$box
 		// $box：指定游戏内容所在父元素
 		function creGame ($box) {
 
@@ -282,7 +291,15 @@ var engine=(function  () {
 			bkgPic();
 			// 根据行数生成自适应雪碧图
 			function bkgPic () {
-				$('div.f-item').css({'backgroundSize':numPerRow*143+"% "+numPerRow*132+"%",'backgroundPosition':'0 0'})
+				// mark
+				$('div.f-item').each(function  (index,item) {
+					var ranColor=ranatb(0,8),
+					num=$(item).data('num');
+					$(item).css({'backgroundSize':numPerRow*143+"% "+numPerRow*132+"%",'backgroundPosition':num/9*100+'% '+ranColor/8*100+'%'});
+					// console.log(item);
+				})
+
+				// $('div.f-item')
 			}
 
 			/** 游戏动态生成表格后，调用CreTargetNum函数，函数根据剩余方格数量做判断
@@ -344,7 +361,7 @@ var engine=(function  () {
 			}
 
 			//判断累加数值是否与目标数值相符以及后续操作
-			function judge () {
+			function judge ($which) {
 				var totalNum=0;
 
 				//匹配成功后消除方块
@@ -360,25 +377,30 @@ var engine=(function  () {
 				//结果处理
 				if (totalNum>targetNum) {
 					numArr=[];
-					$('div.f-item').removeClass('f-click');
+					$('div.f-item').removeClass('f-click').css('animation','');
 				}
 				if (totalNum==targetNum) {
+					$which.css({'animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-webkit-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-moz-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-o-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite'})
+					.addClass('f-click');
 					success();
 					numArr=[];
 					CreTargetNum();	
+				}
+				if (totalNum<targetNum) {
+					$which.css({'animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-webkit-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-moz-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-o-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite'})
+					.addClass('f-click');
 				}
 			}
 
 			//点击事件
 			$('div.f-item').click(function  () {
 				if (!$(this).hasClass('f-click')) {
-					$(this).css({'animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-webkit-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-moz-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite','-o-animation':'brickFlash 1.5s ease infinite,brickSmaller 1.5s ease infinite'})
-					$(this).addClass('f-click');
 					var num=$(this).data('num');
 					numArr.push(num);
-					judge();
+					judge($(this));
+					
 				} else {
-					$(this).css('animation','').removeClass('f-click');
+					$(this).removeClass('f-click').css('animation','');
 				}	
 			})
 
@@ -386,5 +408,5 @@ var engine=(function  () {
 			CreTargetNum()
 		}
 
-	return {ImagesMode:ImagesMode,SoundsMode:SoundsMode,cloud:cloud,logo:logo,slideDown:slideDown,ufo:ufo,creGame:creGame}
+	return {ImagesMode:ImagesMode,SoundsMode:SoundsMode,cloud:cloud,logo:logo,slideDown:slideDown,ufo:ufo,removeUfo:removeUfo,creGame:creGame}
 })()
