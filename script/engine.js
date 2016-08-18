@@ -263,7 +263,6 @@ var engine=(function  () {
 			}
 
 			var w=parseFloat($box.css('width'));
-
 			//根据窗口宽度调整显示的方格数。
 			function howManyBox () {
 				if (w<180)	return 6;
@@ -284,7 +283,7 @@ var engine=(function  () {
 					var num=ranatb(1,9);
 					$box.append("<div class='f-item'></div>");
 					var $item=$('div[class=f-item]:last');
-					$item.css({left:i+'px',top:itemTop+'px',width:itemW+'px',height:itemW+'px'}).html(num).data({'num':num,'index':itemIndex++});
+					$item.css({left:i+'px',top:itemTop+'px',width:itemW+'px',height:itemW+'px'}).data({'num':num,'index':itemIndex++});
 				}
 				itemTop+=itemW;
 			}
@@ -296,10 +295,21 @@ var engine=(function  () {
 					var ranColor=ranatb(0,8),
 					num=$(item).data('num');
 					$(item).css({'backgroundSize':numPerRow*143+"% "+numPerRow*132+"%",'backgroundPosition':num/9*100+'% '+ranColor/8*100+'%'});
-					// console.log(item);
 				})
+			}
 
-				// $('div.f-item')
+			//匹配失败后的方块颤抖动画
+			function fault () {
+				$('div.f-item').each(function  (index,item) {
+					var num=$(item).data('num');
+					if (parseInt(num/9*100)%2) {
+						$(item).animate({left:'-=2%'},150).animate({left:'+=2%'},100)
+						.animate({left:'-=1%'},100).animate({left:'+=1%'},50);
+					} else {
+						$(item).animate({left:'+=2%'},150).animate({left:'-=2%'},100)
+						.animate({left:'+=1%'},100).animate({left:'-=1%'},50);
+					}
+				})
 			}
 
 			/** 游戏动态生成表格后，调用CreTargetNum函数，函数根据剩余方格数量做判断
@@ -314,7 +324,12 @@ var engine=(function  () {
 				totalIndex=$items.last().index(),
 				$items=$('div.f-item'),
 				result=0;
-	
+				
+				// 将目标数字转换成图片显示出来
+				function numToPic () {
+					
+				}
+
 				//产生一个目标索引,接收一个参数arr
 				//arr：该数组中包含的数不会作为目标索引
 				function targetIndex (arr) {
@@ -366,7 +381,10 @@ var engine=(function  () {
 
 				//匹配成功后消除方块
 				function success () {
-					$('div.f-click').remove();
+					$('div.f-click').css({'animation':'brickRotate 1.5s ease infinite','-webkit-animation':'brickRotate 1.5s ease infinite','-moz-animation':'brickRotate 1.5s ease infinite','-o-animation':'brickRotate 1.5s ease infinite'})
+					.fadeOut('slow',function  () {
+						$(this).remove();
+					})
 				}
 
 				// 累加值总和
@@ -377,6 +395,7 @@ var engine=(function  () {
 				//结果处理
 				if (totalNum>targetNum) {
 					numArr=[];
+					fault();
 					$('div.f-item').removeClass('f-click').css('animation','');
 				}
 				if (totalNum==targetNum) {
@@ -392,14 +411,16 @@ var engine=(function  () {
 				}
 			}
 
-			//点击事件
+			//点击事件 有问题
 			$('div.f-item').click(function  () {
 				if (!$(this).hasClass('f-click')) {
+					$(this).addClass('f-click');
 					var num=$(this).data('num');
+					// mark
 					numArr.push(num);
-					judge($(this));
-					
+					judge($(this));	
 				} else {
+					numArr.splice(numArr.indexOf(num),1);
 					$(this).removeClass('f-click').css('animation','');
 				}	
 			})

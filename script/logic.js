@@ -13,6 +13,7 @@
 	images.queueImage("images/logo.png");
 	images.queueImage("images/ufo.png");
 	images.queueImage("images/humo.png");
+	images.queueImage("images/numbers.png");
 
 	var resourceLoad=setInterval(function  (e) {
 		var percentage=images.loadImages(),
@@ -47,7 +48,7 @@
 					});
 					engine.creGame($('#g-game'));
 					$('#g-game').show();
-					
+					$('#g-attri').show();
 				})
 		}	
 	},20);
