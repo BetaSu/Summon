@@ -193,11 +193,13 @@ var engine=(function  () {
 	}
 
 	var humoInterval=true; //该变量控制是否持续产生尾气
-	//ufo在背景中飞行，接受3个参数
-	//parent：飞行元素所在父元素
-	//which：指定飞行的元素
-	//humoType:指定尾气的类型
-	
+
+	/*ufo在背景中飞行，接受3个参数
+	*parent：飞行元素所在父元素
+	*which：指定飞行的元素
+	*humoType:指定尾气的类型
+	*/
+
 	function ufo (parent,which,humoType) {
 		w=parent.width(),
 		h=parent.height();
@@ -326,8 +328,17 @@ var engine=(function  () {
 				result=0;
 				
 				// 将目标数字转换成图片显示出来
-				function numToPic () {
-					
+				function numToPic (targetNum) {
+					if (targetNum/10<1) {
+						// mark
+						$('h3.targetNum1').css({'backgroundPosition':targetNum/10*110+'% '+'0%'});
+						$('h3.targetNum2').css({'backgroundPosition':'-100% -100%'})
+					} else {
+						var ten=Math.floor(targetNum/10),
+						one=targetNum%10;
+						$('h3.targetNum1').css({'backgroundPosition':ten/10*110+'% '+'0%'});
+						$('h3.targetNum2').css({'backgroundPosition':one/10*110+'% '+'0%'});
+					}
 				}
 
 				//产生一个目标索引,接收一个参数arr
@@ -354,23 +365,25 @@ var engine=(function  () {
 					num2=$items.eq(result2).data('num'),
 					num3=$items.eq(result3).data('num');
 					result=num1+num2+num3;
-					$('h3.targetNum').html(result);
+					console.log('大于等于3'+result);
+					numToPic(result);
 					targetNum=result;
 					return result;
 				}
 				// 当剩余1-2个方格时
 				if (totalIndex>=0&&totalIndex<2) {
+					console.log('1-2:'+result);
 					$('div.f-item').each(function  (index,item) {
-						result+=$(item).data('num');
-						$('h3.targetNum').html(result);
-						targetNum=result;
-						return result;
+						result+=$(item).data('num');	
+						console.log(result);
 					})
+					targetNum=result;
+					numToPic(targetNum);
+					return result;
 				}
 				// 所有方格清除完时
 				 else {
-					console.log(totalIndex>=2);
-					$('h3.targetNum').html('congratulation!');
+					console.log('complete!');
 				}	
 		
 			}
@@ -411,12 +424,11 @@ var engine=(function  () {
 				}
 			}
 
-			//点击事件 有问题
+			//点击事件 
 			$('div.f-item').click(function  () {
 				if (!$(this).hasClass('f-click')) {
 					$(this).addClass('f-click');
 					var num=$(this).data('num');
-					// mark
 					numArr.push(num);
 					judge($(this));	
 				} else {

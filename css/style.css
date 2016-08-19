@@ -115,15 +115,6 @@
 	z-index: 20;
 }
 
-#g-attri {width: 30%;
-		height:100%; 
-		display: none;
-		position: absolute;
-		right: 5%;
-		top: 10%;
-		z-index: 20;
-		background: #ccc;}
-
 /*方块*/
 .f-item {background: url(../images/bricks.png) no-repeat;
 	position: absolute;
@@ -146,8 +137,26 @@
 
 .f-click {}
 
-.targetNum {margin: 0 50px; font-size: 40px;}
-.targetNumPic {width: 30%;height: 15%;background:#f00 url(../images/numbers.png);}
+/*右侧属性栏*/
+#g-attri {width: 30%;
+		height:100%; 
+		display: none;
+		position: absolute;
+		right: 5%;
+		top: 10%;
+		z-index: 20;
+		/*background: #ccc;*/
+	}
+
+
+.targetNum1 {}
+.targetNum2 {}
+
+.targetNumPic {float: left;
+			width: 80px;
+			height: 103px;
+			background: url(../images/numbers.png) no-repeat;
+	}
 
 
 
